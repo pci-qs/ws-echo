@@ -6,21 +6,21 @@ const { createServer } = require('http');
 const WebSocket = require('ws');
 
 const app = express();
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express["static"]("public"));
 
 const server = createServer(app);
 const wss = new WebSocket.Server({ server });
 wss.on('connection', function (ws) {
-  console.log('started client interval');
+  console.log('client connected');
   ws.on('message', function message(data, isBinary) {
-    console.log('data: ', data);
+    //console.log('data: ', data);
     console.log('received: %s', data);
     ws.send(data, { binary: isBinary });
   });
 
   ws.send('Connected');
   ws.on('close', function () {
-    console.log('stopping client interval');
+    console.log('client disconnected');
   });
 });
 
