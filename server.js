@@ -1,19 +1,28 @@
-// Licensed under the Apache License. See footer for details.
-require('dotenv').config();
-require("./lib/server").main()
+'use strict';
 
-//------------------------------------------------------------------------------
-// Copyright 2014 Patrick Mueller
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//    http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//------------------------------------------------------------------------------
+const express = require('express');
+const path = require('path');
+const { createServer } = require('http');
+const WebSocket = require('ws');
+
+const app = express();
+app.use(express.static(path.join(__dirname, '/public')));
+
+const server = createServer(app);
+const wss = new WebSocket.Server({ server });
+wss.on('connection', function (ws) {
+  console.log('started client interval');
+  ws.on('message', function message(data, isBinary) {
+    console.log('data: ', data);
+    console.log('received: %s', data);
+    ws.send(data, { binary: isBinary });
+  });
+
+  ws.send('Connected');
+  ws.on('close', function () {
+    console.log('stopping client interval');
+  });
+});
+server.listen(8080, function () {
+  console.log('Listening on http://localhost:8080');
+});
