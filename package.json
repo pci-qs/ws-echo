@@ -13,7 +13,7 @@
         "express": "^3.21.2",
         "websocket": "1.0.x",
         "dotenv": "^10.0.0",
-        "crypto": "^1.0.1"
+        "crypto": "1.0.1"
     },
     "devDependencies": {
         "coffee-script": "1.7.x"
